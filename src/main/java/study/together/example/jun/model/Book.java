@@ -1,12 +1,13 @@
 package study.together.example.jun.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-@Document
-public class Book {
+@RedisHash("book")
+public class Book implements Serializable {
 
     public Book(String id, String name, String desc, int price) {
         this.id = id;
