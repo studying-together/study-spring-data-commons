@@ -8,11 +8,12 @@ import java.util.Objects;
 @Document
 public class Book {
 
-    public Book(String id, String name, String desc, int price) {
+    public Book(String id, String name, String desc, int price, Author author) {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.price = price;
+        this.author = author;
     }
 
     @Id
@@ -20,6 +21,7 @@ public class Book {
     private String name;
     private String desc;
     private int price;
+    private Author author;
 
     public String getId() {
         return id;
@@ -35,6 +37,10 @@ public class Book {
 
     public int getPrice() {
         return price;
+    }
+
+    public Author getAuthor() {
+        return author;
     }
 
     @Override
