@@ -2,6 +2,7 @@ package study.together.example.jun.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,6 +19,7 @@ public class Book implements Serializable {
 
     @Id
     private String id;
+    @Indexed
     private String name;
     private String desc;
     private int price;
