@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import study.together.example.jun.model.Author;
 import study.together.example.jun.model.Book;
 import study.together.example.jun.repository.BookRepository;
 
@@ -21,12 +23,23 @@ public class DataTest {
     @Autowired
     private BookRepository bookRepository;
 
-    Book book = new Book(null, "TEST", "DESC", 500);
-    Book book1 = new Book(null, "TEST1", "DESC1", 1000);
-    Book book2 = new Book(null, "TEST2", "DESC2", 5000);
-    Book book3 = new Book(null, "TEST3", "DESC3", 10000);
-    Book book4 = new Book(null, "TEST3", "DESC4", 10000);
-    Book book5 = new Book(null, "TEST4", "DESC5", 20000);
+    Author jun = new Author("jun", 33);
+    Author min = new Author("min", 32);
+
+    Book book = new Book(null, "TEST", "DESC", 500, min);
+    Book book1 = new Book(null, "TEST1", "DESC1", 1000, min);
+    Book book2 = new Book(null, "TEST2", "DESC2", 5000, jun);
+    Book book3 = new Book(null, "TEST3", "DESC3", 10000, jun);
+    Book book4 = new Book(null, "TEST3", "DESC4", 10000, min);
+    Book book5 = new Book(null, "TEST4", "DESC5", 20000, jun);
+
+    @Test
+    public void PROPERTY_TEST() {
+        bookRepository.saveAll(Stream.of(book, book1, book2, book3, book4, book5).collect(Collectors.toList()));
+
+        List<Book> junBooks = bookRepository.findByAuthor_Name("jun");
+        assertEquals(3, junBooks.size());
+    }
 
     @Test
     public void QUERY_CREATION_TEST() {
@@ -131,6 +144,8 @@ public class DataTest {
         // 페이지 데이터 조회
         assertEquals(4L, book1Page.stream().count());
         assertEquals(2L, book2Page.stream().count());
+
+        Slice<Book> boo32Page = bookRepository.findAll(PageRequest.of(1, 2));
     }
 
 }
