@@ -1,4 +1,4 @@
-package study.together.example.jun.config;
+package study.together.example.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
