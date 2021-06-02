@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.util.Streamable;
 import study.together.example.jun.model.Author;
 import study.together.example.jun.model.Book;
 import study.together.example.jun.repository.BookRepository;
@@ -26,12 +27,31 @@ public class DataTest {
     Author jun = new Author("jun", 33);
     Author min = new Author("min", 32);
 
-    Book book = new Book(null, "TEST", "DESC", 500, min);
-    Book book1 = new Book(null, "TEST1", "DESC1", 1000, min);
-    Book book2 = new Book(null, "TEST2", "DESC2", 5000, jun);
-    Book book3 = new Book(null, "TEST3", "DESC3", 10000, jun);
-    Book book4 = new Book(null, "TEST3", "DESC4", 10000, min);
-    Book book5 = new Book(null, "TEST4", "DESC5", 20000, jun);
+    Book book = new Book(null, "TEST", "Sub", "DESC", 500, min);
+    Book book1 = new Book(null, "TEST1", "Sub", "DESC1", 1000, min);
+    Book book2 = new Book(null, "TEST2", "Sub", "DESC2", 5000, jun);
+    Book book3 = new Book(null, "TEST3", "Sub", "DESC3", 10000, jun);
+    Book book4 = new Book(null, "TEST3", "Sub", "DESC4", 10000, min);
+    Book book5 = new Book(null, "TEST4", "Sub", "DESC5", 20000, jun);
+
+    @Test
+    public void STREAMABLE_TEST() {
+        bookRepository.saveAll(Stream.of(book, book1, book2, book3, book4, book5).collect(Collectors.toList()));
+
+        Streamable<Book> books = bookRepository.findByTitleContaining("Su");
+        assertEquals(6, books.stream().count());
+    }
+
+    @Test
+    public void LIMIT_QUERY_TEST() {
+        bookRepository.saveAll(Stream.of(book, book1, book2, book3, book4, book5).collect(Collectors.toList()));
+
+        Book book = bookRepository.findTopByOrderByNameDesc();
+        assertEquals(book5, book);
+
+        List<Book> twoBook = bookRepository.findFirst2ByTitle("Sub", Sort.by(Sort.Order.desc("name")));
+        assertEquals(2, twoBook.size());
+    }
 
     @Test
     public void PROPERTY_TEST() {
